@@ -7,7 +7,8 @@ package core.controllers.transactions;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Storage;
+import core.models.storages.AccountStorage;
+import core.models.storages.TransactionStorage;
 import core.models.transactions.Withdraw;
 import java.util.ArrayList;
 
@@ -18,8 +19,9 @@ import java.util.ArrayList;
 public class WithdrawController {
     public static Response createWithdraw(String sourceAccountId, String amount){
         try {
-            Storage storage = Storage.getInstance();
-            ArrayList<Account> accounts = storage.getAccounts();
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAccounts();
             Account sourceAccount = null;
             
             double doubleAmount;
@@ -46,7 +48,7 @@ public class WithdrawController {
             
             Withdraw withdraw = new Withdraw("WITHDRAW", sourceAccount,null ,doubleAmount);
             withdraw.execute(doubleAmount, sourceAccount);
-            storage.addTransaction(withdraw);
+            transactionStorage.addTransaction(withdraw);
             return new Response("Withdraw accepted", Status.OK);
         } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

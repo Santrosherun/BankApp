@@ -7,7 +7,8 @@ package core.controllers.transactions;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Storage;
+import core.models.storages.AccountStorage;
+import core.models.storages.TransactionStorage;
 import core.models.transactions.Transfer;
 import java.util.ArrayList;
 
@@ -18,8 +19,9 @@ import java.util.ArrayList;
 public class TransferController {
     public static Response createTransfer(String sourceAccountId, String destinationAccountId, String amount){
         try {
-            Storage storage = Storage.getInstance();
-            ArrayList<Account> accounts = storage.getAccounts();
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAccounts();
             Account sourceAccount = null;
             Account destinationAccount = null;
             
@@ -60,7 +62,7 @@ public class TransferController {
             
             Transfer transfer = new Transfer("TRANSFER", sourceAccount ,destinationAccount ,doubleAmount);
             transfer.execute(doubleAmount, destinationAccount, sourceAccount);
-            storage.addTransaction(transfer);
+            transactionStorage.addTransaction(transfer);
             return new Response("Transfer accepted", Status.OK);
         } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

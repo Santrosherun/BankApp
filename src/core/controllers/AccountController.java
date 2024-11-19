@@ -6,10 +6,11 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
-import core.models.Storage;
 import java.util.ArrayList;
 import core.models.Account;
 import core.models.User;
+import core.models.storages.AccountStorage;
+import core.models.storages.UserStorage;
 import java.util.Random;
 
 /**
@@ -32,9 +33,10 @@ public class AccountController {
             
             doubleBalance = Double.parseDouble(balance);
             intUserId = Integer.parseInt(userId);
-            Storage storage = Storage.getInstance();
-            ArrayList<Account> accounts = storage.getAccounts();
-            ArrayList<User> users = storage.getUsers();
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAccounts();
+            ArrayList<User> users = userStorage.getUsers();
             
             if(doubleBalance < 0){
                 return new Response("Account cannot be create with negative balance", Status.BAD_REQUEST);
@@ -70,7 +72,7 @@ public class AccountController {
                 return new Response("User not found", Status.BAD_REQUEST);
             }
             
-            storage.addAccount(new Account(accountId, owner, doubleBalance));
+            accountStorage.addAccount(new Account(accountId, owner, doubleBalance));
             return new Response("Account created succesfully", Status.OK);
         } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

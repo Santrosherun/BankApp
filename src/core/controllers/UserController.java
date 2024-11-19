@@ -6,8 +6,8 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
-import core.models.Storage;
 import core.models.User;
+import core.models.storages.UserStorage;
 import java.util.ArrayList;
 
 /**
@@ -21,8 +21,8 @@ public class UserController {
         try {
             id1 = Integer.parseInt(id);
             age1 = Integer.parseInt(age);
-            Storage storage = Storage.getInstance();
-            ArrayList<User> users = storage.getUsers();
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<User> users = userStorage.getUsers();
             
             if(id1 < 0 || id1 > 999999999){
                 return new Response("The ID must be a number between 0 and 999999999.", Status.BAD_REQUEST);
@@ -47,7 +47,7 @@ public class UserController {
                 return new Response("The minimun age is 18.", Status.BAD_REQUEST);
             }
             
-            storage.addUser(new User(id1, firstname, lastname, age1));
+            userStorage.addUser(new User(id1, firstname, lastname, age1));
             return new Response("User added successfully.", Status.OK);
             
         } catch (Exception e) {

@@ -7,7 +7,8 @@ package core.controllers.transactions;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Storage;
+import core.models.storages.AccountStorage;
+import core.models.storages.TransactionStorage;
 import core.models.transactions.Deposit;
 
 /**
@@ -23,9 +24,10 @@ public class DepositController {
             if(amount1 < 0){
                 return new Response("The deposit amount must be positive.", Status.BAD_REQUEST);
             }
-            Storage storage = Storage.getInstance();
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            AccountStorage accountStorage = AccountStorage.getInstance();
             Account destinationAccount = null;
-            for (Account account : storage.getAccounts()) {
+            for (Account account : accountStorage.getAccounts()) {
                 if (account.getId().equals(destinationAccountId)) {
                     destinationAccount = account;
                 }
@@ -35,7 +37,7 @@ public class DepositController {
             }
             Deposit deposit = new Deposit("DEPOSIT", null, destinationAccount, amount1);
             deposit.execute(amount1, destinationAccount);
-            storage.addTransaction(deposit);
+            transactionStorage.addTransaction(deposit);
             return new Response("Deposit accepted.", Status.OK);
             
         } catch (NumberFormatException e) {

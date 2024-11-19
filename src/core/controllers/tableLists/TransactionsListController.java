@@ -6,7 +6,8 @@ package core.controllers.tableLists;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
-import core.models.Storage;
+import core.models.storages.Storage;
+import core.models.storages.TransactionStorage;
 import core.models.transactions.Transaction;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,8 +21,8 @@ public class TransactionsListController {
     public static Response updateTransactionsList(DefaultTableModel model){
         try {
             model.setRowCount(0);
-            Storage storage = Storage.getInstance();
-            ArrayList<Transaction> transactions = storage.getTransactions();
+            TransactionStorage transactionStorage = TransactionStorage.getInstance();
+            ArrayList<Transaction> transactions = transactionStorage.getTransactions();
             
             if (transactions == null || transactions.isEmpty()) {
                 return new Response("The list is empty.", Status.NO_CONTENT);

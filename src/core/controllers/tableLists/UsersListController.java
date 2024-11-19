@@ -6,8 +6,8 @@ package core.controllers.tableLists;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
-import core.models.Storage;
 import core.models.User;
+import core.models.storages.UserStorage;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,8 +19,8 @@ public class UsersListController {
     public static Response updateUsersList(DefaultTableModel model){
         try {
             model.setRowCount(0);
-            Storage storage = Storage.getInstance();
-            ArrayList<User> users = storage.getUsers();
+            UserStorage userStorage = UserStorage.getInstance();
+            ArrayList<User> users = userStorage.getUsers();
             
             if (users == null || users.isEmpty()) {
                 return new Response("The list is empty.", Status.NO_CONTENT);

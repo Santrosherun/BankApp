@@ -7,7 +7,7 @@ package core.controllers.tableLists;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
-import core.models.Storage;
+import core.models.storages.AccountStorage;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,8 +19,8 @@ public class AccountsListController {
     public static Response updateAccountsList(DefaultTableModel model){
         try {
             model.setRowCount(0);
-            Storage storage = Storage.getInstance();
-            ArrayList<Account> accounts = storage.getAccounts();
+            AccountStorage accountStorage = AccountStorage.getInstance();
+            ArrayList<Account> accounts = accountStorage.getAccounts();
             
             if (accounts == null || accounts.isEmpty()) {
                 return new Response("The list is empty.", Status.NO_CONTENT);
