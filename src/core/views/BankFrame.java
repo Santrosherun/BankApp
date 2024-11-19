@@ -20,18 +20,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class BankFrame extends javax.swing.JFrame {
     
-    private ArrayList<Account> accounts;
-    private ArrayList<Transaction> transactions;
-    private ArrayList<User> users;
-    
     /**
      * Creates new form BankFrame
      */
     public BankFrame() {
-        initComponents();
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
-        this.users = new ArrayList<>();
+        initComponents();    
     }
 
     /**
