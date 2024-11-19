@@ -8,8 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Storage;
-import core.models.Transaction;
-import core.models.utils.TransactionType;
+import core.models.transactions.Withdraw;
 import java.util.ArrayList;
 
 /**
@@ -42,13 +41,12 @@ public class WithdrawController {
             }
             
             if(doubleAmount > sourceAccount.getBalance()){
-                return new Response(amount, 0);
+                return new Response("Not enough founds", Status.BAD_REQUEST);
             }
             
-            double temp = sourceAccount.getBalance();
-            temp = temp - doubleAmount;
-            sourceAccount.setBalance(temp);
-            storage.addTransaction(new Transaction(TransactionType.WITHDRAW, sourceAccount,null ,doubleAmount));
+            Withdraw withdraw = new Withdraw("WITHDRAW", sourceAccount,null ,doubleAmount);
+            withdraw.execute(doubleAmount, sourceAccount);
+            storage.addTransaction(withdraw);
             return new Response("Withdraw accepted", Status.OK);
         } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

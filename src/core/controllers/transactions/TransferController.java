@@ -8,8 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Storage;
-import core.models.Transaction;
-import core.models.utils.TransactionType;
+import core.models.transactions.Transfer;
 import java.util.ArrayList;
 
 /**
@@ -59,12 +58,9 @@ public class TransferController {
                 return new Response("You can not send money to your own account.", Status.BAD_REQUEST);
             }
             
-            double temp1 = sourceAccount.getBalance();
-            double temp2 = destinationAccount.getBalance();
-            sourceAccount.setBalance(temp1 - doubleAmount);
-            destinationAccount.setBalance(temp2 + doubleAmount);
-            
-            storage.addTransaction(new Transaction(TransactionType.TRANSFER, sourceAccount ,destinationAccount ,doubleAmount));
+            Transfer transfer = new Transfer("TRANSFER", sourceAccount ,destinationAccount ,doubleAmount);
+            transfer.execute(doubleAmount, destinationAccount, sourceAccount);
+            storage.addTransaction(transfer);
             return new Response("Transfer accepted", Status.OK);
         } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

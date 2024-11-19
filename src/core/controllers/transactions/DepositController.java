@@ -8,8 +8,7 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Storage;
-import core.models.Transaction;
-import core.models.utils.TransactionType;
+import core.models.transactions.Deposit;
 
 /**
  *
@@ -34,17 +33,12 @@ public class DepositController {
             if(destinationAccount == null){
                 return new Response("The account is not registered.", Status.BAD_REQUEST);
             }
-            
-            double balance;
-            balance = destinationAccount.getBalance();
-            balance = balance + amount1;
-            
-            destinationAccount.setBalance(balance);
-
-            storage.addTransaction(new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amount1));
+            Deposit deposit = new Deposit("DEPOSIT", null, destinationAccount, amount1);
+            deposit.execute(amount1, destinationAccount);
+            storage.addTransaction(deposit);
             return new Response("Deposit accepted.", Status.OK);
             
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }

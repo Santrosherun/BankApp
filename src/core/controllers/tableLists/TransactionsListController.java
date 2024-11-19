@@ -7,7 +7,7 @@ package core.controllers.tableLists;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Storage;
-import core.models.Transaction;
+import core.models.transactions.Transaction;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
@@ -31,7 +31,7 @@ public class TransactionsListController {
             Collections.reverse(transactionsCopy);
 
             for (Transaction transaction : transactionsCopy) {
-                model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
+                model.addRow(new Object[]{transaction.getType(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
             }
             
             return new Response("List updated succesfully.", Status.OK);

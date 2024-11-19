@@ -2,29 +2,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package core.models;
+package core.models.transactions;
 
-import core.models.utils.TransactionType;
+import core.models.Account;
 
 /**
  *
  * @author edangulo
  */
-public class Transaction {
+public abstract class Transaction {
     
-    private TransactionType type;
-    private Account sourceAccount;
-    private Account destinationAccount;
-    private double amount;
+    protected String type;
+    protected Account sourceAccount;
+    protected Account destinationAccount;
+    protected double amount;
     
-    public Transaction(TransactionType type, Account sourceAccount, Account destinationAccount, double amount) {
+    public Transaction(String type, Account sourceAccount, Account destinationAccount, double amount) {
         this.type = type;
         this.sourceAccount = sourceAccount;
         this.destinationAccount = destinationAccount;
         this.amount = amount;
     }
 
-    public TransactionType getType() {
+    public String getType() {
         return type;
     }
 
@@ -38,6 +38,10 @@ public class Transaction {
 
     public double getAmount() {
         return amount;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
     
 }
