@@ -4,6 +4,7 @@
  */
 package core.views;
 
+import core.controllers.AccountController;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.models.Account;
@@ -82,7 +83,7 @@ public class BankFrame extends javax.swing.JFrame {
         listTransactionsLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         transcationsTable = new javax.swing.JTable();
-        transcationsRefreshButton = new javax.swing.JButton();
+        transactionsRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -471,11 +472,11 @@ public class BankFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(transcationsTable);
 
-        transcationsRefreshButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        transcationsRefreshButton.setText("Refresh");
-        transcationsRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+        transactionsRefreshButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        transactionsRefreshButton.setText("Refresh");
+        transactionsRefreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                transcationsRefreshButtonActionPerformed(evt);
+                transactionsRefreshButtonActionPerformed(evt);
             }
         });
 
@@ -491,7 +492,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(64, 64, 64)
                 .addComponent(listTransactionsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(transcationsRefreshButton)
+                .addComponent(transactionsRefreshButton)
                 .addGap(89, 89, 89))
         );
         transcationsPanelLayout.setVerticalGroup(
@@ -500,7 +501,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(transcationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(listTransactionsLabel)
-                    .addComponent(transcationsRefreshButton))
+                    .addComponent(transactionsRefreshButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
@@ -548,33 +549,22 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            int userId = Integer.parseInt(createAccountIdTextField.getText());
-            double initialBalance = Double.parseDouble(initialBalanceTextField.getText());
-            
-            User selectedUser = null;
-            for (User user : this.users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
-            
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-                
-                createAccountIdTextField.setText("");
-                initialBalanceTextField.setText("");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        String userId = createAccountIdTextField.getText();
+        String initialBalance = initialBalanceTextField.getText();
+
+        Response response = AccountController.createAccount(userId, initialBalance);
+
+        if (response.getStatus() >= 500) {
+        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        createAccountIdTextField.setText("");
+        initialBalanceTextField.setText("");
+            
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
@@ -686,7 +676,7 @@ public class BankFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_accountsRefreshButtonActionPerformed
 
-    private void transcationsRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transcationsRefreshButtonActionPerformed
+    private void transactionsRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transactionsRefreshButtonActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) transcationsTable.getModel();
         model.setRowCount(0);
@@ -697,7 +687,7 @@ public class BankFrame extends javax.swing.JFrame {
         for (Transaction transaction : transactionsCopy) {
             model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
-    }//GEN-LAST:event_transcationsRefreshButtonActionPerformed
+    }//GEN-LAST:event_transactionsRefreshButtonActionPerformed
 
     private void registerIdTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerIdTextFieldActionPerformed
         // TODO add your handling code here:
@@ -748,8 +738,8 @@ public class BankFrame extends javax.swing.JFrame {
     private javax.swing.JLabel sourceAccountLabel;
     private javax.swing.JTextField sourceAccountTextField;
     private javax.swing.JLabel transactionTypeLabel;
+    private javax.swing.JButton transactionsRefreshButton;
     private javax.swing.JPanel transcationsPanel;
-    private javax.swing.JButton transcationsRefreshButton;
     private javax.swing.JTable transcationsTable;
     private javax.swing.JPanel userListPanel;
     private javax.swing.JButton usersRefreshButton;

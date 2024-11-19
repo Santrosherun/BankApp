@@ -628,7 +628,7 @@
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Component id="listTransactionsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="transcationsRefreshButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="transactionsRefreshButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -639,7 +639,7 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="listTransactionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="transcationsRefreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="transactionsRefreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="264" max="32767" attributes="0"/>
@@ -678,7 +678,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="transcationsRefreshButton">
+            <Component class="javax.swing.JButton" name="transactionsRefreshButton">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="12" style="3"/>
@@ -686,7 +686,7 @@
                 <Property name="text" type="java.lang.String" value="Refresh"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="transcationsRefreshButtonActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="transactionsRefreshButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
