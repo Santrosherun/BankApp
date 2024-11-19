@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package core.controllers;
+package core.controllers.transactions;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
@@ -53,6 +53,10 @@ public class TransferController {
             
             if(sourceAccount.getBalance() < doubleAmount){
                 return new Response("The transfer amount cannot be greater than the source balance", Status.BAD_REQUEST);
+            }
+            
+            if(sourceAccount == destinationAccount){
+                return new Response("You can not send money to your own account.", Status.BAD_REQUEST);
             }
             
             double temp1 = sourceAccount.getBalance();

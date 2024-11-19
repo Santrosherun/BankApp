@@ -5,19 +5,15 @@
 package core.views;
 
 import core.controllers.AccountController;
-import core.controllers.DepositController;
-import core.controllers.TransferController;
+import core.controllers.tableLists.AccountsListController;
+import core.controllers.transactions.DepositController;
+import core.controllers.tableLists.TransactionsListController;
+import core.controllers.transactions.TransferController;
 import core.controllers.UserController;
-import core.controllers.WithdrawController;
+import core.controllers.tableLists.UsersListController;
+import core.controllers.transactions.WithdrawController;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
-import core.models.Account;
-import core.models.Transaction;
-import core.models.utils.TransactionType;
-import core.models.User;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -81,12 +77,12 @@ public class BankFrame extends javax.swing.JFrame {
         listAccountsPanel = new javax.swing.JPanel();
         listAccountsLabel = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        AccountsTable = new javax.swing.JTable();
+        accountsTable = new javax.swing.JTable();
         accountsRefreshButton = new javax.swing.JButton();
         transcationsPanel = new javax.swing.JPanel();
         listTransactionsLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        transcationsTable = new javax.swing.JTable();
+        transactionsTable = new javax.swing.JTable();
         transactionsRefreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -387,7 +383,7 @@ public class BankFrame extends javax.swing.JFrame {
         listAccountsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         listAccountsLabel.setText("List Accounts");
 
-        AccountsTable.setModel(new javax.swing.table.DefaultTableModel(
+        accountsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -406,7 +402,7 @@ public class BankFrame extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(AccountsTable);
+        jScrollPane3.setViewportView(accountsTable);
 
         accountsRefreshButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         accountsRefreshButton.setText("Refresh");
@@ -448,7 +444,7 @@ public class BankFrame extends javax.swing.JFrame {
         listTransactionsLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         listTransactionsLabel.setText("List Transactions");
 
-        transcationsTable.setModel(new javax.swing.table.DefaultTableModel(
+        transactionsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -474,7 +470,7 @@ public class BankFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(transcationsTable);
+        jScrollPane1.setViewportView(transactionsTable);
 
         transactionsRefreshButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         transactionsRefreshButton.setText("Refresh");
@@ -614,38 +610,40 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void usersRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersRefreshButtonActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) listUserTable.getModel();
-        model.setRowCount(0);
+        Response response = UsersListController.updateUsersList((DefaultTableModel)listUserTable.getModel());
         
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
-        
-        for (User user : this.users) {
-            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_usersRefreshButtonActionPerformed
 
     private void accountsRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountsRefreshButtonActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) AccountsTable.getModel();
-        model.setRowCount(0);
+        Response response = AccountsListController.updateAccountsList((DefaultTableModel)accountsTable.getModel());
         
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
-        
-        for (Account account : this.accounts) {
-            model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_accountsRefreshButtonActionPerformed
 
     private void transactionsRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transactionsRefreshButtonActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) transcationsTable.getModel();
-        model.setRowCount(0);
+        Response response = TransactionsListController.updateTransactionsList((DefaultTableModel)transactionsTable.getModel());
         
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
-        Collections.reverse(transactionsCopy);
-        
-        for (Transaction transaction : transactionsCopy) {
-            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_transactionsRefreshButtonActionPerformed
 
@@ -658,8 +656,8 @@ public class BankFrame extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable AccountsTable;
     private javax.swing.JButton accountsRefreshButton;
+    private javax.swing.JTable accountsTable;
     private javax.swing.JTextField ageTextField;
     private javax.swing.JLabel amountLabel;
     private javax.swing.JTextField amountTextField;
@@ -699,8 +697,8 @@ public class BankFrame extends javax.swing.JFrame {
     private javax.swing.JTextField sourceAccountTextField;
     private javax.swing.JLabel transactionTypeLabel;
     private javax.swing.JButton transactionsRefreshButton;
+    private javax.swing.JTable transactionsTable;
     private javax.swing.JPanel transcationsPanel;
-    private javax.swing.JTable transcationsTable;
     private javax.swing.JPanel userListPanel;
     private javax.swing.JButton usersRefreshButton;
     // End of variables declaration//GEN-END:variables

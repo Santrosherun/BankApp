@@ -48,7 +48,7 @@ public class AccountController {
             
             for (User user : users) {
                 if(intUserId != user.getId()){
-                    userCount = intUserId + 1;
+                    userCount = userCount + 1;
                 }
             }
             

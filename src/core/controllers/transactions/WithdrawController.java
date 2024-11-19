@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package core.controllers;
+package core.controllers.transactions;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
@@ -46,7 +46,7 @@ public class WithdrawController {
             }
             
             double temp = sourceAccount.getBalance();
-            temp = temp + doubleAmount;
+            temp = temp - doubleAmount;
             sourceAccount.setBalance(temp);
             storage.addTransaction(new Transaction(TransactionType.WITHDRAW, sourceAccount,null ,doubleAmount));
             return new Response("Withdraw accepted", Status.OK);
