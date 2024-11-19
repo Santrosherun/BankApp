@@ -1,3 +1,3 @@
 # BankApp
-Allison Ruis Romero: 2138
+Allison Ruiz Romero: 2138
 Santiago David Diaz Vásquez: 2138
