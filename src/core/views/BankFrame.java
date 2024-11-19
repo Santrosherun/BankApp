@@ -6,9 +6,11 @@ package core.views;
 
 import core.controllers.AccountController;
 import core.controllers.DepositController;
+import core.controllers.TransferController;
 import core.controllers.UserController;
 import core.controllers.WithdrawController;
 import core.controllers.utils.Response;
+import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.utils.TransactionType;
@@ -576,7 +578,7 @@ public class BankFrame extends javax.swing.JFrame {
         String destinationAccountId = destinationAccountTextField.getText();
         String sourceAccountId = sourceAccountTextField.getText();
         String amount = amountTextField.getText();
-        Response response = null;
+        Response response = new Response("", Status.INTERNAL_SERVER_ERROR);
         switch (type) {
             case "Deposit": {
                 response = DepositController.createDeposit(destinationAccountId, amount);
@@ -587,31 +589,7 @@ public class BankFrame extends javax.swing.JFrame {
                 break;
             }
             case "Transfer": {
-                String sourceAccountId = sourceAccountTextField.getText();
-                String destinationAccountId = destinationAccountTextField.getText();
-                double amount = Double.parseDouble(amountTextField.getText());
-
-                Account sourceAccount = null;
-                Account destinationAccount = null;
-                for (Account account : this.accounts) {
-                    if (account.getId().equals(sourceAccountId)) {
-                        sourceAccount = account;
-                    }
-                }
-                for (Account account : this.accounts) {
-                    if (account.getId().equals(destinationAccountId)) {
-                        destinationAccount = account;
-                    }
-                }
-                if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
-                    destinationAccount.deposit(amount);
-
-                    this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
-
-                    sourceAccountTextField.setText("");
-                    destinationAccountTextField.setText("");
-                    amountTextField.setText("");
-                }
+                response = TransferController.createTransfer(sourceAccountId, destinationAccountId, amount);
                 break;
             }
             default: {
