@@ -5,6 +5,10 @@
 package core.controllers;
 
 import core.controllers.utils.Response;
+import core.controllers.utils.Status;
+import core.models.Storage;
+import core.models.User;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,7 +16,42 @@ import core.controllers.utils.Response;
  */
 public class UserController {
     
-    public Response createUser(){
-        
+    public static Response createUser(String id, String firstname, String lastname, String age){
+        int id1, age1;
+        try {
+            id1 = Integer.parseInt(id);
+            age1 = Integer.parseInt(age);
+            Storage storage = Storage.getInstance();
+            ArrayList<User> users = storage.getUsers();
+            
+            if(id1 < 0 || id1 > 999999999){
+                return new Response("The ID must be a number between 0 and 999999999.", Status.BAD_REQUEST);
+            }
+            
+            //Unique usersId
+            for(User user : users){
+                if(user.getId() == id1){
+                    return new Response("A user with this ID is already registered.", Status.BAD_REQUEST);
+                }
+            }
+            
+            if (firstname.equals("")) {
+                return new Response("Firstname must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (lastname.equals("")) {
+                return new Response("Lastname must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if(age1 < 18){
+                return new Response("The minimun age is 18.", Status.BAD_REQUEST);
+            }
+            
+            storage.addUser(new User(id1, firstname, lastname, age1));
+            return new Response("User added successfully.", Status.OK);
+            
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
     }
 }

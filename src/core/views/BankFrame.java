@@ -4,6 +4,8 @@
  */
 package core.views;
 
+import core.controllers.UserController;
+import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.utils.TransactionType;
@@ -522,21 +524,26 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            int id = Integer.parseInt(registerIdTextField.getText());
-            String firstname = firstNameTextField.getText();
-            String lastname = lastNameTextField.getText();
-            int age = Integer.parseInt(ageTextField.getText());
-            
-            this.users.add(new User(id, firstname, lastname, age));
-            
-            registerIdTextField.setText("");
-            firstNameTextField.setText("");
-            lastNameTextField.setText("");
-            ageTextField.setText("");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+
+        String id = registerIdTextField.getText();
+        String firstname = firstNameTextField.getText();
+        String lastname = lastNameTextField.getText();
+        String age = ageTextField.getText();
+
+        Response response = UserController.createUser(id, firstname, lastname, age);
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        registerIdTextField.setText("");
+        firstNameTextField.setText("");
+        lastNameTextField.setText("");
+        ageTextField.setText("");
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
