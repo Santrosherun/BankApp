@@ -39,7 +39,12 @@ public class TransferController {
                 return new Response("Amount must be not empty.", Status.BAD_REQUEST);
             }
             
-            doubleAmount = Double.parseDouble(amount);
+            try {
+                doubleAmount = Double.parseDouble(amount);
+
+            } catch (NumberFormatException e) {
+                return new Response("Must be numeric", Status.BAD_REQUEST);
+            }
             for (Account account : accounts) {
                 if(account.getId().equals(sourceAccountId)){
                     sourceAccount = account;
@@ -76,8 +81,8 @@ public class TransferController {
             transfer.execute(doubleAmount, destinationAccount, sourceAccount);
             transactionStorage.addItem(transfer);
             return new Response("Transfer accepted", Status.OK);
-        } catch (NumberFormatException e) {
-            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

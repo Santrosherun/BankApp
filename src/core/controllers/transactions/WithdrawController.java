@@ -25,8 +25,11 @@ public class WithdrawController {
             Account sourceAccount = null;
             
             double doubleAmount;
-            
-            doubleAmount = Double.parseDouble(amount);
+            try {
+                doubleAmount = Double.parseDouble(amount);
+            } catch (NumberFormatException e) {
+                return new Response("Must be numeric", Status.BAD_REQUEST);
+            }
             
             if (sourceAccountId.equals("")) {
                 return new Response("Source account id must be not empty.", Status.BAD_REQUEST);
@@ -58,8 +61,8 @@ public class WithdrawController {
             withdraw.execute(doubleAmount, sourceAccount);
             transactionStorage.addItem(withdraw);
             return new Response("Withdraw accepted", Status.OK);
-        } catch (NumberFormatException e) {
-            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

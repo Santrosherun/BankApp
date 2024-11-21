@@ -19,8 +19,12 @@ public class DepositController {
     public static Response createDeposit(String destinationAccountId, String amount){
         double amount1;
         try {
-            amount1 = Double.parseDouble(amount);
-            
+            try {
+                amount1 = Double.parseDouble(amount);
+            } catch (NumberFormatException e) {
+                return new Response("Must be numeric", Status.BAD_REQUEST);
+            }
+           
             if (destinationAccountId.equals("")) {
                 return new Response("Destination account id must be not empty.", Status.BAD_REQUEST);
             }
@@ -48,8 +52,8 @@ public class DepositController {
             transactionStorage.addItem(deposit);
             return new Response("Deposit accepted.", Status.OK);
             
-        } catch (NumberFormatException e) {
-            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }
