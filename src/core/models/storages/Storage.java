@@ -10,4 +10,8 @@ package core.models.storages;
  */
 public abstract class Storage {
 
+    public Storage() {
+    }
+    
+    public abstract void addItem(Object object);
 }

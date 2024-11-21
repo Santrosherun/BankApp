@@ -26,9 +26,10 @@ public class AccountStorage extends Storage {
         return instance;
     }
     
-    public void addAccount(Account account){
-        if(!this.accounts.contains(account)){
-            this.accounts.add(account);
+    @Override
+    public void addItem(Object account){
+        if(!this.accounts.contains((Account)account)){
+            this.accounts.add((Account)account);
         }
     }
     

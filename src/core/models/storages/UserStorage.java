@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author sddva
  */
-public class UserStorage extends Storage {
+public class UserStorage extends Storage{
     private static UserStorage instance;
     private ArrayList<User> users;
     
@@ -26,9 +26,10 @@ public class UserStorage extends Storage {
         return instance;
     }
     
-    public void addUser(User user){
-        if(!this.users.contains(user)){
-            this.users.add(user);
+    @Override
+    public void addItem(Object user){
+        if(!this.users.contains((User)user)){
+            this.users.add((User)user);
         }
     }
     

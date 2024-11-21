@@ -38,6 +38,14 @@ public class AccountController {
             ArrayList<Account> accounts = accountStorage.getAccounts();
             ArrayList<User> users = userStorage.getUsers();
             
+            if (userId.equals("")) {
+                return new Response("Id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (balance.equals("")) {
+                return new Response("Initial balance must be not empty.", Status.BAD_REQUEST);
+            }
+            
             if(doubleBalance < 0){
                 return new Response("Account cannot be create with negative balance", Status.BAD_REQUEST);
             }
@@ -72,10 +80,10 @@ public class AccountController {
                 return new Response("User not found", Status.BAD_REQUEST);
             }
             
-            accountStorage.addAccount(new Account(accountId, owner, doubleBalance));
+            accountStorage.addItem(new Account(accountId, owner, doubleBalance));
             return new Response("Account created succesfully", Status.OK);
         } catch (NumberFormatException e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
         }   
         
     }

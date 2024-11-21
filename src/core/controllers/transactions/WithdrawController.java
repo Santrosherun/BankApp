@@ -28,6 +28,14 @@ public class WithdrawController {
             
             doubleAmount = Double.parseDouble(amount);
             
+            if (sourceAccountId.equals("")) {
+                return new Response("Source account id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (amount.equals("")) {
+                return new Response("Amount must be not empty.", Status.BAD_REQUEST);
+            }
+            
             for (Account account : accounts) {
                 if(account.getId().equals(sourceAccountId)){
                     sourceAccount = account;
@@ -43,15 +51,15 @@ public class WithdrawController {
             }
             
             if(doubleAmount > sourceAccount.getBalance()){
-                return new Response("Not enough founds", Status.BAD_REQUEST);
+                return new Response("Not enough funds", Status.BAD_REQUEST);
             }
             
             Withdraw withdraw = new Withdraw("WITHDRAW", sourceAccount,null ,doubleAmount);
             withdraw.execute(doubleAmount, sourceAccount);
-            transactionStorage.addTransaction(withdraw);
+            transactionStorage.addItem(withdraw);
             return new Response("Withdraw accepted", Status.OK);
         } catch (NumberFormatException e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

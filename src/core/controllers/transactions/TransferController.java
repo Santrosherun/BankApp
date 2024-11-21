@@ -27,6 +27,18 @@ public class TransferController {
             
             double doubleAmount;
             
+            if (sourceAccountId.equals("")) {
+                return new Response("Source account id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (destinationAccountId.equals("")) {
+                return new Response("Destination account id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (amount.equals("")) {
+                return new Response("Amount must be not empty.", Status.BAD_REQUEST);
+            }
+            
             doubleAmount = Double.parseDouble(amount);
             for (Account account : accounts) {
                 if(account.getId().equals(sourceAccountId)){
@@ -62,10 +74,10 @@ public class TransferController {
             
             Transfer transfer = new Transfer("TRANSFER", sourceAccount ,destinationAccount ,doubleAmount);
             transfer.execute(doubleAmount, destinationAccount, sourceAccount);
-            transactionStorage.addTransaction(transfer);
+            transactionStorage.addItem(transfer);
             return new Response("Transfer accepted", Status.OK);
         } catch (NumberFormatException e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

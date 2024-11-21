@@ -24,6 +24,22 @@ public class UserController {
             UserStorage userStorage = UserStorage.getInstance();
             ArrayList<User> users = userStorage.getUsers();
             
+            if (id.equals("")) {
+                return new Response("Id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (firstname.equals("")) {
+                return new Response("Firstname must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (lastname.equals("")) {
+                return new Response("Lastname must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (age.equals("")) {
+                return new Response("Age must be not empty.", Status.BAD_REQUEST);
+            }
+            
             if(id1 < 0 || id1 > 999999999){
                 return new Response("The ID must be a number between 0 and 999999999.", Status.BAD_REQUEST);
             }
@@ -35,23 +51,15 @@ public class UserController {
                 }
             }
             
-            if (firstname.equals("")) {
-                return new Response("Firstname must be not empty.", Status.BAD_REQUEST);
-            }
-            
-            if (lastname.equals("")) {
-                return new Response("Lastname must be not empty.", Status.BAD_REQUEST);
-            }
-            
             if(age1 < 18){
                 return new Response("The minimun age is 18.", Status.BAD_REQUEST);
             }
-            
-            userStorage.addUser(new User(id1, firstname, lastname, age1));
+
+            userStorage.addItem(new User(id1, firstname, lastname, age1));
             return new Response("User added successfully.", Status.OK);
             
-        } catch (Exception e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        } catch (NumberFormatException e) {
+            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -26,9 +26,10 @@ public class TransactionStorage extends Storage{
         return instance;
     }
     
-    public void addTransaction(Transaction transaction){
-        if(!this.transactions.contains(transaction)){
-            this.transactions.add(transaction);
+    @Override
+    public void addItem(Object transaction){
+        if(!this.transactions.contains((Transaction)transaction)){
+            this.transactions.add((Transaction)transaction);
         }
     }
 

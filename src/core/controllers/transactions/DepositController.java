@@ -21,7 +21,15 @@ public class DepositController {
         try {
             amount1 = Double.parseDouble(amount);
             
-            if(amount1 < 0){
+            if (destinationAccountId.equals("")) {
+                return new Response("Destination account id must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if (amount.equals("")) {
+                return new Response("Amount must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            if(amount1 <= 0){
                 return new Response("The deposit amount must be positive.", Status.BAD_REQUEST);
             }
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
@@ -37,11 +45,11 @@ public class DepositController {
             }
             Deposit deposit = new Deposit("DEPOSIT", null, destinationAccount, amount1);
             deposit.execute(amount1, destinationAccount);
-            transactionStorage.addTransaction(deposit);
+            transactionStorage.addItem(deposit);
             return new Response("Deposit accepted.", Status.OK);
             
         } catch (NumberFormatException e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            return new Response("Must be numeric", Status.INTERNAL_SERVER_ERROR);
         }
     }
 }
