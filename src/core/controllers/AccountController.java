@@ -31,8 +31,7 @@ public class AccountController {
             int intUserId, userCount = 0;
             User owner = null;
             
-            doubleBalance = Double.parseDouble(balance);
-            intUserId = Integer.parseInt(userId);
+            
             AccountStorage accountStorage = AccountStorage.getInstance();
             UserStorage userStorage = UserStorage.getInstance();
             ArrayList<Account> accounts = accountStorage.getAccounts();
@@ -44,6 +43,14 @@ public class AccountController {
             
             if (balance.equals("")) {
                 return new Response("Initial balance must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            try {
+                doubleBalance = Double.parseDouble(balance);
+                intUserId = Integer.parseInt(userId);
+
+            } catch (NumberFormatException e) {
+                return new Response("The balance and the id must be numeric", Status.BAD_REQUEST);
             }
             
             if(doubleBalance < 0){

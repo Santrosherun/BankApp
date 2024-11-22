@@ -19,8 +19,7 @@ public class UserController {
     public static Response createUser(String id, String firstname, String lastname, String age){
         int id1, age1;
         try {
-            id1 = Integer.parseInt(id);
-            age1 = Integer.parseInt(age);
+            
             UserStorage userStorage = UserStorage.getInstance();
             ArrayList<User> users = userStorage.getUsers();
             
@@ -38,6 +37,13 @@ public class UserController {
             
             if (age.equals("")) {
                 return new Response("Age must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            try {
+                id1 = Integer.parseInt(id);
+                age1 = Integer.parseInt(age);
+            } catch (NumberFormatException e) {
+                return new Response("The id and the age must be numeric", Status.BAD_REQUEST);
             }
             
             if(id1 < 0 || id1 > 999999999){

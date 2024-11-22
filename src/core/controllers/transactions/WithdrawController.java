@@ -25,11 +25,6 @@ public class WithdrawController {
             Account sourceAccount = null;
             
             double doubleAmount;
-            try {
-                doubleAmount = Double.parseDouble(amount);
-            } catch (NumberFormatException e) {
-                return new Response("Must be numeric", Status.BAD_REQUEST);
-            }
             
             if (sourceAccountId.equals("")) {
                 return new Response("Source account id must be not empty.", Status.BAD_REQUEST);
@@ -37,6 +32,12 @@ public class WithdrawController {
             
             if (amount.equals("")) {
                 return new Response("Amount must be not empty.", Status.BAD_REQUEST);
+            }
+            
+            try {
+                doubleAmount = Double.parseDouble(amount);
+            } catch (NumberFormatException e) {
+                return new Response("The amount must be numeric", Status.BAD_REQUEST);
             }
             
             for (Account account : accounts) {

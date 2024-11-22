@@ -43,7 +43,7 @@ public class TransferController {
                 doubleAmount = Double.parseDouble(amount);
 
             } catch (NumberFormatException e) {
-                return new Response("Must be numeric", Status.BAD_REQUEST);
+                return new Response("The amount must be numeric", Status.BAD_REQUEST);
             }
             for (Account account : accounts) {
                 if(account.getId().equals(sourceAccountId)){
