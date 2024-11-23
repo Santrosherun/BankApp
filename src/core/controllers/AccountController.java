@@ -20,22 +20,37 @@ import java.util.Random;
 public class AccountController {
     public static Response createAccount(String userId, String balance){
         try {
-            Random random = new Random();
-            int first = random.nextInt(1000);
-            int second = random.nextInt(1000000);
-            int third = random.nextInt(100);
-
-            String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
             
             double doubleBalance;
             int intUserId, userCount = 0;
             User owner = null;
             
-            
             AccountStorage accountStorage = AccountStorage.getInstance();
             UserStorage userStorage = UserStorage.getInstance();
             ArrayList<Account> accounts = accountStorage.getAccounts();
             ArrayList<User> users = userStorage.getUsers();
+
+            String accountId;
+            boolean isUnique;
+            do {
+                Random random = new Random();
+                int first = random.nextInt(1000);
+                int second = random.nextInt(1000000);
+                int third = random.nextInt(100);
+
+                accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+
+                isUnique = true;
+                int i = 0;
+                while (i < accounts.size()) {
+                    Account account = accounts.get(i);
+                    if (account.getId().equals(accountId)) {
+                        isUnique = false;
+                        break;
+                    }
+                    i++;
+                }
+            } while (!isUnique);
             
             if (userId.equals("")) {
                 return new Response("Id must be not empty.", Status.BAD_REQUEST);
@@ -46,6 +61,11 @@ public class AccountController {
             }
             
             try {
+                
+                if (userId.length() > 9) {
+                    return new Response("The ID must have a maximum of 9 digits.", Status.BAD_REQUEST);
+                }
+                
                 doubleBalance = Double.parseDouble(balance);
                 intUserId = Integer.parseInt(userId);
 
@@ -54,13 +74,7 @@ public class AccountController {
             }
             
             if(doubleBalance < 0){
-                return new Response("Account cannot be create with negative balance", Status.BAD_REQUEST);
-            }
-            
-            for(Account account : accounts){
-                if(account.getId().equals(accountId)){
-                    return new Response("An account with this id is already registered", Status.BAD_REQUEST);
-                }
+                return new Response("Account cannot be created with a negative balance", Status.BAD_REQUEST);
             }
             
             for (User user : users) {

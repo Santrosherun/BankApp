@@ -40,6 +40,11 @@ public class UserController {
             }
             
             try {
+                
+                if (id.length() > 9) {
+                    return new Response("The ID must have a maximum of 9 digits.", Status.BAD_REQUEST);
+                }
+                
                 id1 = Integer.parseInt(id);
                 age1 = Integer.parseInt(age);
             } catch (NumberFormatException e) {
